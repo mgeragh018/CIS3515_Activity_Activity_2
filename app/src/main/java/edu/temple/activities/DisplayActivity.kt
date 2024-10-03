@@ -1,5 +1,6 @@
 package edu.temple.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -18,8 +19,17 @@ class DisplayActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_display)
 
+        // Initialize the TextView and Button by finding them by their ID in the layout
         lyricsDisplayTextView = findViewById(R.id.lyricsDisplayTextView)
         textSizeSelectorButton = findViewById(R.id.textSizeSelectorButton)
 
+        // Step 1: Set up the button's click listener
+        textSizeSelectorButton.setOnClickListener {
+            // Create an Intent to launch TextSizeActivity when the button is clicked
+            val intent = Intent(this, TextSizeActivity::class.java)
+
+            // Start TextSizeActivity without expecting a result at this point
+            startActivity(intent)
+        }
     }
 }
