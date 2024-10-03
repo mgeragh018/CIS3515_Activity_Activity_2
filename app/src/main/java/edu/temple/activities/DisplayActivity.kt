@@ -5,15 +5,27 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 
 class DisplayActivity : AppCompatActivity() {
 
-    // TODO Step 1: Launch TextSizeActivity when button clicked to allow selection of text size value
-
-    // TODO Step 3: Use returned value for lyricsDisplayTextView text size
+    // Step 1: Launch TextSizeActivity when button clicked to allow selection of text size value
+    // Step 3: Use returned value for lyricsDisplayTextView text size
 
     private lateinit var lyricsDisplayTextView: TextView
     private lateinit var textSizeSelectorButton: Button
+
+    // Register for activity result to receive the selected text size from TextSizeActivity
+    private val textSizeLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            // Get the selected text size from the result Intent
+            val selectedSize = result.data?.getIntExtra("selectedSize", -1)
+            if (selectedSize != -1) {
+                // Step 3: Update the text size of lyricsDisplayTextView with the selected value
+                lyricsDisplayTextView.textSize = selectedSize?.toFloat() ?: 14f
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,13 +35,16 @@ class DisplayActivity : AppCompatActivity() {
         lyricsDisplayTextView = findViewById(R.id.lyricsDisplayTextView)
         textSizeSelectorButton = findViewById(R.id.textSizeSelectorButton)
 
-        // Step 1: Set up the button's click listener
+        // Set up the button's click listener to launch TextSizeActivity for a result
         textSizeSelectorButton.setOnClickListener {
-            // Create an Intent to launch TextSizeActivity when the button is clicked
+            // Create an Intent to launch TextSizeActivity
             val intent = Intent(this, TextSizeActivity::class.java)
 
-            // Start TextSizeActivity without expecting a result at this point
-            startActivity(intent)
+            // Step 1: Launch TextSizeActivity expecting a result
+            textSizeLauncher.launch(intent)
         }
     }
 }
+
+
+
